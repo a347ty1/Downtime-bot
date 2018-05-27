@@ -1,0 +1,91 @@
+v = "0.1.0"
+
+# https://github.com/Rapptz/discord.py/blob/async/examples/reply.py
+import discord
+import datetime
+import random
+import numpy as np
+import testplace as dt
+
+TOKEN = 'NDQ4ODc1MDUxMDIyODExMTM3.DejOgg.3DcQclyDdWNmgQBF0iS905R8iEU'
+
+client = discord.Client()
+try: 
+    f = open("dtbot.txt", "r+")
+except:
+    f = open("dtbot.txt", "w")
+    f.close()
+
+@client.event
+async def on_message(message):
+    # we do not want the bot to reply to itself
+    if message.author == client.user:
+        return
+
+    if message.content.startswith('!!hello'):
+        msg = 'Hello {0.author.mention}'.format(message)
+        await client.send_message(message.channel, msg)
+        
+    if message.content.startswith('!!purge') and message.author == "Cap'n#1606":
+        abort = input("Continue Purge? y/n")
+        if abort == "n":
+            arg = "Purge Aborted."
+        elif abort == "y":
+            arg = dt.delall() 
+        msg = arg.format(message)
+        await client.send_message(message.channel, msg)
+    
+    if message.content.startswith('!!reset') or message.content.startswith('!!start'):
+        r = message.content.split(" ")
+        arg = '{0.author.mention} ' + str(dt.reset(message.author, r[1]))
+        msg = arg.format(message)
+        await client.send_message(message.channel, msg)
+        
+    if message.content.startswith('!!quest'):
+        r = message.content.split(" ")
+        arg = '{0.author.mention} ' + str(dt.quest(message.author, r[1]))
+        msg = arg.format(message)
+        await client.send_message(message.channel, msg)
+    
+    if message.content.startswith('!!dt') or message.content.startswith('!!downtime'):
+        r = message.content.split(" ")
+        arg = "{0.author.mention} " + str(dt.read(message.author, r[1]))
+        msg = arg.format(message)
+        await client.send_message(message.channel, msg)
+    
+    if message.content.startswith('!!spend'):
+        r = message.content.split(" ")
+        if len(r) >= 3:
+            x = r[2]
+        else:
+            x = 1
+        arg = "{0.author.mention} " + str(dt.spend(message.author, (r[1]), x))
+        msg = arg.format(message)
+        await client.send_message(message.channel, msg)
+            
+    if message.content.startswith('!!help'):
+        arg = "Wow, looks like I'm a robot, here to help track your downtime. I have a few major commands, and a few that are so hidden, only my creator, the great and mighty Cap'n#1696 (who spent like 16 hours making me, come on, I add like 2 numbers) knows about them." + "\n" "I'm pretty simple so syntax is important. my main commands follow: ```!!reset [character name] -- will add your character to my database, or resets them, useful if you use all your dt. \n!!dt [character name] -- I'll tell you the number of dt you have. \n!!quest [character name] -- will allow me to start tracking the number of quests you've been on so I can tell you your current dt better." + "\n" +"!!spend [character name] [days spent] -- will tell me you've spent some downtime. If you don't say how many, I'll assume one." +"\n"+"!!delete [character name] -- will delete a character from my database. This cannot be reversed.\n!!syntax will have me tell you the rp syntax, if that's what you want.``` \nthat's all i'm programed to do at the moment. If you have suggestions or comments, including complaints, feel free to send them to Cap'n#1696 who will get round to fixing it at some point. *Happy questing!*"
+        msg = arg.format(message)
+        await client.send_message(message.channel, msg)
+    
+    if message.content.startswith('!!syntax'):
+        arg = "Hi {0.author.mention} \nI'm here to help you format your rp stuff.\n if you're talking in character remember your quotation marks that look like this " + '"' ". \nIf your character is doing stuff, put it in *italics* do this by putting an asterix * at the start and end of the phrase, make sure there's no space between it otherwise it doesn't work right. \n if your character is thinking, use angular brackets <> \nif you use an ability, use the 'grave accent' that looks like this (it's in the top left of your keyboard, below the escape key) `it makes things look like this` \nthanks for asking for help, there's always more help in the rules book, so refer there. If you're still having problems, ping a dm or admin. \n if you didn't ask for this, message Cap'n#1696, he'll fix me for you, and only for you." 
+        msg = arg.format(message)
+        await client.send_message(message.channel, msg)
+    
+    if message.content.startswith('!!delete') or message.content.startswith('!!del'):
+        r = message.content.split(" ")
+        arg = "{0.author.mention} " + str(dt.delete(message.author,(r[1])))
+        msg = arg.format(message)
+        await client.send_message(message.channel, msg)
+        
+@client.event
+async def on_ready():
+    print('Logged in as')
+    print(client.user.name)
+    print(client.user.id)
+    print(datetime.date.today())
+    print("Version: " + str(v))
+    print('------')
+
+client.run(TOKEN)
