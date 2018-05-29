@@ -224,7 +224,7 @@ import random
 import numpy as np
 import testplace as dt
 
-TOKEN = 'NDQ4ODc1MDUxMDIyODExMTM3.DejOgg.3DcQclyDdWNmgQBF0iS905R8iEU'
+TOKEN = 'XXXXXX'
 
 client = discord.Client()
 try: 
